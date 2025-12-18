@@ -51,13 +51,13 @@ public class DPCCFunction {
     public static boolean checkValidCategoryAndRecipe(Player p, String categoryName, String recipeName) {
         if (!isExistingCategory(categoryName)) {
             p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 카테고리 이름입니다.");
-            return false;
+            return true;
         }
         if (!isExistingRecipe(categoryName, recipeName)) {
             p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 레시피 이름입니다.");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static void createRecipe(Player p, String categoryName, String recipeName) {
@@ -66,6 +66,10 @@ public class DPCCFunction {
             return;
         }
         Category category = plugin.getData().get(categoryName);
+        if (category.getRecipes().containsKey(recipeName)) {
+            p.sendMessage(plugin.getPrefix() + "§c이미 존재하는 레시피 입니다.");
+            return;
+        }
         category.getRecipes().put(recipeName, new Recipe(categoryName, recipeName));
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
@@ -73,7 +77,7 @@ public class DPCCFunction {
     }
 
     public static void openRecipeItemSettingInventory(Player p, String categoryName, String recipeName) {
-        if (!checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
+        if (checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
             return;
         }
         Category category = plugin.getData().get(categoryName);
@@ -93,7 +97,7 @@ public class DPCCFunction {
     }
 
     public static void openResultItemSettingInventory(Player p, String categoryName, String recipeName) {
-        if (!checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
+        if (checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
             return;
         }
         Category category = plugin.getData().get(categoryName);
@@ -114,7 +118,7 @@ public class DPCCFunction {
     }
 
     public static void setResultAmount(Player p, String categoryName, String recipeName, int amount) {
-        if (!checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
+        if (checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
             return;
         }
         Category category = plugin.getData().get(categoryName);
@@ -127,7 +131,7 @@ public class DPCCFunction {
     }
 
     public static void openResultWeightSettingInventory(Player p, String categoryName, String recipeName) {
-        if (!checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
+        if (checkValidCategoryAndRecipe(p, categoryName, recipeName)) {
             return;
         }
         Category category = plugin.getData().get(categoryName);
@@ -188,7 +192,7 @@ public class DPCCFunction {
                 continue;
             }
             ResultWeight rw = result.findWeight(i);
-            if(rw != null) {
+            if (rw != null) {
                 int weight = rw.getWeight();
                 List<String> lore = item.getItemMeta() != null && item.getItemMeta().getLore() != null ? item.getItemMeta().getLore() : new ArrayList<>();
                 if (weight > 0) {

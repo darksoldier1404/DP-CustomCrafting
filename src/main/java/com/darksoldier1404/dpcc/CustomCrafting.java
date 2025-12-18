@@ -3,6 +3,7 @@ package com.darksoldier1404.dpcc;
 import com.darksoldier1404.dpcc.commands.DPCCCommand;
 import com.darksoldier1404.dpcc.obj.Category;
 import com.darksoldier1404.dpcc.obj.Result;
+import com.darksoldier1404.dppc.annotation.DPPCoreVersion;
 import com.darksoldier1404.dppc.data.DPlugin;
 import com.darksoldier1404.dppc.data.DataContainer;
 import com.darksoldier1404.dppc.data.DataType;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@DPPCoreVersion(since = "5.3.3")
 public class CustomCrafting extends DPlugin {
     private static CustomCrafting plugin;
     private final DataContainer<String, Category> data;

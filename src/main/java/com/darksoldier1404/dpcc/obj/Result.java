@@ -107,7 +107,7 @@ public class Result {
             data.set("Result.item." + i, inventory.getContents()[i]);
         }
         for (ResultWeight weight : weights) {
-            data = weight.serialize(data);
+            weight.serialize(data);
         }
         return data;
     }

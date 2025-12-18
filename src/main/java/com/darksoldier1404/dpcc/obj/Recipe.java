@@ -200,7 +200,7 @@ public class Recipe {
         for (int i = 0; i < ingredients.length; i++) {
             data.set("Recipe." + name + ".ingredient." + i, ingredients[i]);
         }
-        data = result.serialize(data);
+        result.serialize(data);
         return data;
     }
 

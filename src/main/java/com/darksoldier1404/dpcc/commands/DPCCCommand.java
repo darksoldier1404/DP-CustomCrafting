@@ -5,6 +5,11 @@ import com.darksoldier1404.dpcc.functions.DPCCFunction;
 import com.darksoldier1404.dppc.builder.command.ArgumentIndex;
 import com.darksoldier1404.dppc.builder.command.ArgumentType;
 import com.darksoldier1404.dppc.builder.command.CommandBuilder;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.function.BiFunction;
 
 public class DPCCCommand {
     private static final CustomCrafting plugin = CustomCrafting.getInstance();
@@ -21,7 +26,7 @@ public class DPCCCommand {
                 });
         builder.beginSubCommand("createrecipe", "/dpcc createrecipe <categoryName> <recipeName>")
                 .withArgument(ArgumentIndex.ARG_0, ArgumentType.STRING, plugin.getData().keySet())
-                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING)
+                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING, getRecipeListBiFunction())
                 .withPermission("dpcc.admin")
                 .executesPlayer((p, args) -> {
                     String categoryName = args.getString(ArgumentIndex.ARG_0);
@@ -31,7 +36,7 @@ public class DPCCCommand {
                 });
         builder.beginSubCommand("recipeitem", "/dpcc recipeitem <categoryName> <recipeName>")
                 .withArgument(ArgumentIndex.ARG_0, ArgumentType.STRING, plugin.getData().keySet())
-                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING)
+                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING, getRecipeListBiFunction())
                 .withPermission("dpcc.admin")
                 .executesPlayer((p, args) -> {
                     String categoryName = args.getString(ArgumentIndex.ARG_0);
@@ -41,7 +46,7 @@ public class DPCCCommand {
                 });
         builder.beginSubCommand("setresultitem", "/dpcc setresultitem <categoryName> <recipeName>")
                 .withArgument(ArgumentIndex.ARG_0, ArgumentType.STRING, plugin.getData().keySet())
-                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING)
+                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING, getRecipeListBiFunction())
                 .withPermission("dpcc.admin")
                 .executesPlayer((p, args) -> {
                     String categoryName = args.getString(ArgumentIndex.ARG_0);
@@ -51,7 +56,7 @@ public class DPCCCommand {
                 });
         builder.beginSubCommand("setresultamount", "/dpcc setresultamount <categoryName> <recipeName> <amount>")
                 .withArgument(ArgumentIndex.ARG_0, ArgumentType.STRING, plugin.getData().keySet())
-                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING)
+                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING, getRecipeListBiFunction())
                 .withArgument(ArgumentIndex.ARG_2, ArgumentType.INTEGER)
                 .withPermission("dpcc.admin")
                 .executesPlayer((p, args) -> {
@@ -63,7 +68,7 @@ public class DPCCCommand {
                 });
         builder.beginSubCommand("setresultweight", "/dpcc setresultweight <categoryName> <recipeName>")
                 .withArgument(ArgumentIndex.ARG_0, ArgumentType.STRING, plugin.getData().keySet())
-                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING)
+                .withArgument(ArgumentIndex.ARG_1, ArgumentType.STRING, getRecipeListBiFunction())
                 .withPermission("dpcc.admin")
                 .executesPlayer((p, args) -> {
                     String categoryName = args.getString(ArgumentIndex.ARG_0);
@@ -88,5 +93,14 @@ public class DPCCCommand {
                 });
 
         builder.build("dpcc");
+    }
+
+    private static @NotNull BiFunction<Player, String[], List<String>> getRecipeListBiFunction() {
+        return (p, args) -> {
+            if (plugin.getData().containsKey(args[1])) {
+                return plugin.getData().get(args[1]).getRecipes().keySet().stream().toList();
+            }
+            return null;
+        };
     }
 }
