@@ -80,7 +80,7 @@ public class DPCCEvent implements Listener {
                     return;
                 e.setCancelled(true);
                 DPCCFunction.editResultWeightWithChat(p, e.getSlot());
-                p.sendMessage(plugin.getPrefix() + "§a가중치를 채팅으로 입력해주세요.");
+                p.sendMessage(plugin.getPrefix() + plugin.getLang().get("enter_weight_chat"));
                 p.closeInventory();
             }
         }

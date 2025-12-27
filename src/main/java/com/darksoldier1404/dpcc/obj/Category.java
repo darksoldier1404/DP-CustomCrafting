@@ -62,8 +62,8 @@ public class Category implements DataCargo {
             ItemStack item = new ItemStack(Material.BOOK);
             ItemMeta im = item.getItemMeta();
             if (im != null) {
-                im.setDisplayName("§e레시피: §f" + r.getName());
-                im.setLore(Collections.singletonList("§7클릭하여 해당 레시피 제작."));
+                im.setDisplayName(CustomCrafting.getInstance().getLang().getWithArgs("recipe_title", r.getName()));
+                im.setLore(Collections.singletonList(CustomCrafting.getInstance().getLang().get("click_to_craft")));
                 im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 item.setItemMeta(im);
             }
@@ -86,7 +86,7 @@ public class Category implements DataCargo {
     @Override
     public Category deserialize(YamlConfiguration data) {
         this.name = data.getString("name");
-        this.inventory = new DInventory("레시피 목록 : " + name, 54, true, true, CustomCrafting.getInstance()).deserialize(data);
+        this.inventory = new DInventory(CustomCrafting.getInstance().getLang().getWithArgs("recipe_list_title", name), 54, true, true, CustomCrafting.getInstance()).deserialize(data);
         if (data.contains("Recipe")) {
             for (String key : data.getConfigurationSection("Recipe").getKeys(false)) {
                 Recipe r = new Recipe(name, key);

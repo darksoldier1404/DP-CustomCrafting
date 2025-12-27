@@ -28,16 +28,16 @@ public class DPCCFunction {
 
     public static void createCategory(Player p, String name) {
         if (isExistingCategory(name)) {
-            p.sendMessage(plugin.getPrefix() + "§c이미 존재하는 카테고리 이름입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("category_already_exists"));
             return;
         }
         Category category = new Category();
-        DInventory inventory = new DInventory("레시피 목록 : " + name, 54, true, true, plugin);
+        DInventory inventory = new DInventory(plugin.getLang().getWithArgs("recipe_list_title", name), 54, true, true, plugin);
         category.setInventory(inventory);
         category.setName(name);
         plugin.getData().put(name, category);
         plugin.getData().save(name);
-        p.sendMessage(plugin.getPrefix() + "§a카테고리 §f" + name + "§a(이)가 생성되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("category_created", name));
     }
 
     public static boolean isExistingRecipe(String categoryName, String recipeName) {
@@ -50,11 +50,11 @@ public class DPCCFunction {
 
     public static boolean checkValidCategoryAndRecipe(Player p, String categoryName, String recipeName) {
         if (!isExistingCategory(categoryName)) {
-            p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 카테고리 이름입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("category_not_exists"));
             return true;
         }
         if (!isExistingRecipe(categoryName, recipeName)) {
-            p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 레시피 이름입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("recipe_not_exists"));
             return true;
         }
         return false;
@@ -62,18 +62,18 @@ public class DPCCFunction {
 
     public static void createRecipe(Player p, String categoryName, String recipeName) {
         if (!isExistingCategory(categoryName)) {
-            p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 카테고리 이름입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("category_not_exists"));
             return;
         }
         Category category = plugin.getData().get(categoryName);
         if (category.getRecipes().containsKey(recipeName)) {
-            p.sendMessage(plugin.getPrefix() + "§c이미 존재하는 레시피 입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("recipe_already_exists"));
             return;
         }
         category.getRecipes().put(recipeName, new Recipe(categoryName, recipeName));
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
-        p.sendMessage(plugin.getPrefix() + "§a레시피 §f" + recipeName + "§a(이)가 생성되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("recipe_created", recipeName));
     }
 
     public static void openRecipeItemSettingInventory(Player p, String categoryName, String recipeName) {
@@ -93,7 +93,7 @@ public class DPCCFunction {
         category.getRecipes().put(recipe.getName(), recipe);
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
-        p.sendMessage(plugin.getPrefix() + "§a레시피 재료가 저장되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("recipe_ingredients_saved"));
     }
 
     public static void openResultItemSettingInventory(Player p, String categoryName, String recipeName) {
@@ -114,7 +114,7 @@ public class DPCCFunction {
         category.getRecipes().put(recipe.getName(), recipe);
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
-        p.sendMessage(plugin.getPrefix() + "§a결과 아이템이 저장되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("result_item_saved"));
     }
 
     public static void setResultAmount(Player p, String categoryName, String recipeName, int amount) {
@@ -127,7 +127,7 @@ public class DPCCFunction {
         category.getRecipes().put(recipeName, recipe);
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
-        p.sendMessage(plugin.getPrefix() + "§a결과 아이템 수량이 §f" + amount + "§a(으)로 설정되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("result_amount_set", String.valueOf(amount)));
     }
 
     public static void openResultWeightSettingInventory(Player p, String categoryName, String recipeName) {
@@ -145,7 +145,7 @@ public class DPCCFunction {
 
     public static void setResultWeightFromChat(Player p, String message) {
         if (!plugin.currentEditingWeight.containsKey(p.getUniqueId())) {
-            p.sendMessage(plugin.getPrefix() + "§c편집 중인 결과 아이템이 없습니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("no_editing_result"));
             return;
         }
         int slot = plugin.currentEditingWeight.get(p.getUniqueId());
@@ -156,7 +156,7 @@ public class DPCCFunction {
         try {
             weightValue = Integer.parseInt(message);
         } catch (NumberFormatException e) {
-            p.sendMessage(plugin.getPrefix() + "§c유효한 숫자가 아닙니다. 다시 시도해주세요.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("invalid_number"));
             return;
         }
         if (weight == null) {
@@ -170,7 +170,7 @@ public class DPCCFunction {
         category.getRecipes().put(recipe.getName(), recipe);
         plugin.getData().put(categoryName, category);
         plugin.getData().save(categoryName);
-        p.sendMessage(plugin.getPrefix() + "§a결과 아이템의 가중치가 §f" + weightValue + "§a(으)로 설정되었습니다.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("weight_set", String.valueOf(weightValue)));
         plugin.currentEditingWeight.remove(p.getUniqueId());
         Bukkit.getScheduler().runTaskLater(plugin, () -> result.editWeight(p), 1L);
     }
@@ -196,9 +196,9 @@ public class DPCCFunction {
                 int weight = rw.getWeight();
                 List<String> lore = item.getItemMeta() != null && item.getItemMeta().getLore() != null ? item.getItemMeta().getLore() : new ArrayList<>();
                 if (weight > 0) {
-                    lore.add("§7Weight: §e" + weight);
+                    lore.add(plugin.getLang().getWithArgs("weight_lore", String.valueOf(weight)));
                     double chance = (double) weight / (double) totalWeight * 100.0;
-                    lore.add("§7Chance: §e" + String.format("%.2f", chance) + "%");
+                    lore.add(plugin.getLang().getWithArgs("chance_lore", String.valueOf(chance)));
                 }
                 ItemMeta meta = item.getItemMeta();
                 meta.setLore(lore);
@@ -209,7 +209,7 @@ public class DPCCFunction {
 
     public static void openCategoryInventory(Player p, String categoryName) {
         if (!isExistingCategory(categoryName)) {
-            p.sendMessage(plugin.getPrefix() + "§c존재하지 않는 카테고리 이름입니다.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("category_not_exists"));
             return;
         }
         Category category = plugin.getData().get(categoryName);

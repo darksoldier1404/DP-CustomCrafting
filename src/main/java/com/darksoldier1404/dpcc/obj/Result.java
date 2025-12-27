@@ -20,7 +20,7 @@ public class Result {
     public Result(Recipe recipe) {
         parentRecipe = recipe;
         resultAmount = 1;
-        inventory = new DInventory("Result Item Edit - " + recipe.getName(), 54, CustomCrafting.getInstance());
+        inventory = new DInventory(CustomCrafting.getInstance().getLang().getWithArgs("result_edit_title", recipe.getName()), 54, CustomCrafting.getInstance());
     }
 
     public Result(Recipe recipe, DInventory inventory, List<ResultWeight> weights) {

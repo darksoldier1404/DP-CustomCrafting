@@ -60,7 +60,7 @@ public class Recipe {
 
 
     public void editIngredient(Player p) {
-        DInventory inv = new DInventory("레시피 재료 편집 : " + name, 54, true, true, CustomCrafting.getInstance());
+        DInventory inv = new DInventory(CustomCrafting.getInstance().getLang().getWithArgs("ingredient_edit_title", name), 54, true, true, CustomCrafting.getInstance());
         inv.setObj(this);
         inv.setChannel(201);
         ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
@@ -89,7 +89,7 @@ public class Recipe {
     }
 
     public void openRecipeCraft(Player p) {
-        DInventory inv = new DInventory("레시피 제작 : " + name, 54, CustomCrafting.getInstance());
+        DInventory inv = new DInventory(CustomCrafting.getInstance().getLang().getWithArgs("craft_title", name), 54, CustomCrafting.getInstance());
         ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta im = pane.getItemMeta();
         if (im != null) {
@@ -109,8 +109,8 @@ public class Recipe {
         ItemStack confirm = new ItemStack(Material.GREEN_WOOL);
         ItemMeta cim = confirm.getItemMeta();
         if (cim != null) {
-            cim.setDisplayName("§a제작하기");
-            cim.setLore(Collections.singletonList("§7클릭하여 제작을 시도합니다."));
+            cim.setDisplayName(CustomCrafting.getInstance().getLang().get("craft_button"));
+            cim.setLore(Collections.singletonList(CustomCrafting.getInstance().getLang().get("click_to_attempt_craft")));
             cim.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             confirm.setItemMeta(cim);
         }
@@ -121,7 +121,7 @@ public class Recipe {
             ItemStack item = inv.getItem(10);
             im = item.getItemMeta();
             List<String> lore = im.hasLore() ? im.getLore() : new ArrayList<>();
-            lore.add("§6클릭하여 모든 결과 아이템 확인.");
+            lore.add(CustomCrafting.getInstance().getLang().get("click_to_preview_results"));
             item.setItemMeta(im);
             inv.setItem(10, item);
         }
@@ -153,7 +153,7 @@ public class Recipe {
 
     public void craft(Player p) {
         if (!hasEnoughIngredients(p)) {
-            p.sendMessage(CustomCrafting.getInstance().getPrefix() + "§c제작에 필요한 재료가 부족합니다.");
+            p.sendMessage(CustomCrafting.getInstance().getPrefix() + CustomCrafting.getInstance().getLang().get("not_enough_ingredients"));
             return;
         }
         List<ItemStack> selected = getResultByWeight();
@@ -164,9 +164,9 @@ public class Recipe {
                     p.getInventory().removeItem(ingredient);
                 }
             }
-            p.sendMessage(CustomCrafting.getInstance().getPrefix() + "§a제작이 완료되었습니다.");
+            p.sendMessage(CustomCrafting.getInstance().getPrefix() + CustomCrafting.getInstance().getLang().get("crafting_completed"));
         } else {
-            p.sendMessage(CustomCrafting.getInstance().getPrefix() + "§c인벤토리 공간이 부족합니다.");
+            p.sendMessage(CustomCrafting.getInstance().getPrefix() + CustomCrafting.getInstance().getLang().get("not_enough_inventory_space"));
         }
     }
 

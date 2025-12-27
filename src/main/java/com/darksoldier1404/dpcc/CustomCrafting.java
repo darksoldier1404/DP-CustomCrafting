@@ -23,7 +23,7 @@ public class CustomCrafting extends DPlugin {
     public static boolean showChanceInPreview;
 
     public CustomCrafting() {
-        super(false);
+        super(true);
         plugin = this;
         init();
         data = loadDataContainer(new DataContainer<>(this, DataType.CUSTOM, "data"), Category.class);
