@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
@@ -48,7 +49,6 @@ public class DPCCEvent implements Listener {
         ItemStack item = e.getCurrentItem();
         if (inv.isValidHandler(plugin)) {
             if (inv.isValidChannel(0)) { // recipe list from category
-                if (item == null) return;
                 e.setCancelled(true);
                 if (NBT.hasTagKey(item, "dpcc_recipe_name")) {
                     String recipeName = NBT.getStringTag(item, "dpcc_recipe_name");
@@ -61,9 +61,14 @@ public class DPCCEvent implements Listener {
                 e.setCancelled(true);
                 Recipe r = (Recipe) inv.getObj();
                 if (NBT.hasTagKey(item, "dpcc_confirm")) {
-                    // craft and give result
-                    r.craft(p);
-                    return;
+                    if (e.getClick() == ClickType.LEFT) {
+                        r.craft(p);
+                        return;
+                    }
+                    if (e.getClick() == ClickType.SHIFT_LEFT) {
+                        r.craftAll(p);
+                        return;
+                    }
                 }
                 if (e.getRawSlot() == 10) {
                     r.getResult().preview(p);
